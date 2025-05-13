@@ -1,0 +1,87 @@
+
+#+name: SICP Notes
+#+author: Kaung Htet
+#+property: header-args:racket :lang sicp :results value :session sicp
+
+* Chapter 1
+
+ *Procedures and Processes; Substitution Model*
+
+** Evaluating combinations
+These are the substitution rules for evaluating a combination:
+1. Evaluate the operator to get the procedure.
+2. Evaluate the operands to get the arguments.
+3. Apply the procedure to the arguments.
+   1. Copy the body of the procedure.
+   2. Substitute the arguments supplied for the formal parameters of the procedure.
+   3. Evaluate the resulting body.
+
+*** Example
+
+#+begin_src racket
+(define (sq a) (* a a))
+
+(define (sos x y) (+ (sq x) (sq y)))
+
+(sos 3 4)
+
+;; (+ (sq 3) (sq 4))
+;; (+ (sq 3) (* 4 4))
+;; (+ (sq 3) 16)
+;; (+ (* 3 3) 16)
+;; (+ 9 16)
+;; 25
+
+#+end_src
+
+#+RESULTS:
+: 25
+
+#+begin_verse
+But one of the things we have to learn how to do is ignore details. The key to understanding complicated things is to know what not to look at, and what not compute, and what not to think.
+
+ ---Sussman
+#+end_verse
+
+** Evaluating conditionals
+To evaluate (if predicate consequent alternative), follow these steps:
+1. Evaluate the predicate expression.
+   1. If it yields true, evaluate the consequent expression.
+   2. If it yields false, evaluate the alternative expression.
+
+** Peano arithmetic
+There are two ways to add whole numbers in Peano arithmetic.
+
+#+begin_src racket
+(define (+ x y)
+  (if (= x 0)
+      y
+      (+ (-1+ x) (1+ y))))
+
+(define (+ x y)
+  (if (= x 0)
+      y
+      (1+ (+ (-1+ x) y))))
+#+end_src
+
+Both are written using recursion, but they are different: the first generates a /linear iterative/ process with \(O(n)\) time and \(O(n)\) space; the second generates a /linear recursive/ process with \(O(n)\) time and \(O(1)\) space.
+
+The iteration has all of its state in explicit variables. The recursion does not
+
+** Tower of Hanoi
+Move a \(n\)-high tower from spike ~from~ to spike ~to~ using spike ~spare~ as a spare:
+
+#+begin_quote
+The way in which you would construct a recursive process is by wishful thinking. You have to believe.
+#+end_quote
+
+#+begin_src racket
+(define (move n from to spare)
+  (cond
+    ((= n 0) "DONE")
+    (else (move (-1+ n) from spare to)
+          (print-move from to)
+          (move (-1+ m) spare to from))))
+#+end_src
+
+* Chapter 2
